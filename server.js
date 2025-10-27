@@ -4,6 +4,8 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+console.log("Démarrage du serveur...")
+
 // Pour pouvoir utiliser __dirname avec les modules ES :
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,7 +44,6 @@ wss.on('connection', ws => {
 						}
 				});*/
 		});
-
 		ws.send('Check');
 });
 
