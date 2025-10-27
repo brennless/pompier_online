@@ -70,7 +70,7 @@ socket.addEventListener("message", event => {
 				more_than_max(data.pouls, data.poulsM, '.pouls');
 				more_than_max(data.spo2, data.spo2M, '.spo2');
 				more_than_max(data.temp, data.tempM, '.temp');
-				more_than_max(data.pni1, data.pni1M '.pni');
+				more_than_max(data.pni1, data.pni1M, '.pni');
 		} catch (error) {
 				console.log('Oops : ', error);
 				console.log('Message : ', event.data.toString());
