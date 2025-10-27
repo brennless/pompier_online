@@ -19,20 +19,31 @@ const wss = new WebSocketServer({ server });
 
 // A la connection ws
 wss.on('connection', ws => {
-		console.log('Client WebSocket connecté');
+		console.log('WebSocket client connected');
 		ws.on('message', message => {
-				console.log('Message reçu :', message.toString());
-				if(message == "L'ADMIN A CLIQUE"){
-						console.log("La condition marche");
+				
+				try {
+						const receivedData = JSON.parse(message);
+						console.log('Received JSON:', receivedData);
 						wss.clients.forEach(client => {
 								if(client.readyState === WebSocket.OPEN){
-										client.send("change vite");
+										client.send(JSON.stringify(receivedData));
 								}
 						});
+				} catch (error) {
+						console.error('Received a non-JSON');
+						console.log('Message : ', message.toString());
 				}
+
+
+				/*wss.clients.forEach(client => {
+						if(client.readyState === WebSocket.OPEN){
+								client.send(message.toString());
+						}
+				});*/
 		});
 
-		ws.send('Salut du serveur WebSocket');
+		ws.send('Check');
 });
 
 // Servir les fichiers statiques

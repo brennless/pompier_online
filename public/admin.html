@@ -3,16 +3,23 @@
 <head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Mon site Node.js en admin</title>
+		<title>Multi1 Admin</title>
 		<link rel="stylesheet" href="style.css">
 </head>
 <body>
-		<h1>Bienvenue sur mon site, mais la face admin !</h1>
-		<button id="btn_admin">Mets à jour des truc?</button>
+		<form id="form">
+		<label> Pouls : </label>
+		<input type="text" class="entry" id="pouls_entry" name="pouls_entry" placeholder="62"></br>
+		<label> SpO2 : </label>
+		<input type="text" class="entry" id="spo2_entry" name="spo2_entry" placeholder="92"></br>
+
+		<label> Temp : </label>
+		<input type="text" class="entry" id="temp_entry" name="temp_entry" placeholder="jsp"></br>
+		<label> PNI : </label>
+		<input type="text" class="entry" id="pni_entry" name="pni_entry" placeholder="jsp trop"></br>
 		
-		<script type="text/javascript">
-				function test2() { console.log("Test du load encore"); }
-		</script>
+		<button type="submit" id="submit">Mettre à jour</button>
+		</form>
 		<script type="text/javascript" src="script.js">
 		</script>
 </body>
