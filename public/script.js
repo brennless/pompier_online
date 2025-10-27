@@ -13,12 +13,14 @@ form.addEventListener('submit', (event) => {
 		const poulsV = document.getElementById('pouls_entry').value;
 		const spo2V = document.getElementById('spo2_entry').value;
 		const tempV = document.getElementById('temp_entry').value;
-		const pniV = document.getElementById('pni_entry').value;
+		const pniV1 = document.getElementById('pni_entry1').value;
+		const pniV2 = document.getElementById('pni_entry2').value;
 		const data = {
 				pouls : poulsV,
 				spo2 : spo2V,
 				temp : tempV,
-				pni : pniV
+				pni1 : pniV1,
+				pni2 : pniV2
 		}
 		console.log(data);
 		socket.send(JSON.stringify(data));
@@ -36,11 +38,13 @@ socket.addEventListener("message", event => {
 				const pouls = document.querySelector('.pouls'+acc);
 				const spo2 = document.querySelector('.spo2'+acc);
 				const temp = document.querySelector('.temp'+acc);
-				const pni = document.querySelector('.pni'+acc);
+				const pni1 = document.querySelector('.pni > .contenu > .v1');
+				const pni2 = document.querySelector('.pni > .contenu > .v2');
 				pouls.innerHTML = data.pouls;
 				spo2.innerHTML = data.spo2;
 				temp.innerHTML = data.temp;
-				pni.innerHTML = data.pni;
+				pni1.innerHTML = data.pni1;
+				pni2.innerHTML = data.pni2;
 		} catch (error) {
 				console.error('Oops : ', error);
 				console.log('Message : ', event.data.toString());
