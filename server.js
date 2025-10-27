@@ -3,6 +3,7 @@ import { WebSocketServer } from 'ws';
 import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { randomUUID } from 'crypto';
 
 console.log("Démarrage du serveur...")
 
@@ -19,24 +20,61 @@ const server = http.createServer(app);
 // Creation serveur WebSocket base sur le serv http
 const wss = new WebSocketServer({ server });
 
+const clients = new Map();
+let admins = [];
+
+function update_admins(){
+		const arrClientsId = Array.from(clients.keys());
+		const message = {
+				pour : "admin",
+				type: "clients",
+				data : arrClientsId
+		};
+		admins.forEach(admin => {
+				admin.send(JSON.stringify(message));
+		});
+}
 // A la connection ws
 wss.on('connection', ws => {
-		console.log('WebSocket client connected');
-		ws.on('message', message => {
-				
-				try {
-						const receivedData = JSON.parse(message);
-						console.log('Received JSON:', receivedData);
-						wss.clients.forEach(client => {
-								if(client.readyState === WebSocket.OPEN){
-										client.send(JSON.stringify(receivedData));
-								}
+		console.log("Connection...");
+		ws.on('message', message => { // à la recepetion d'un message
+				// init d'un client
+				if(message.toString() === "/"){
+						const idC = randomUUID();
+						clients.set(idC, ws);
+						console.log('Nouveau client, uid :', idC);
+						const message = {
+								pour : "client",
+								type : "id",
+								data : idC
+						}
+						ws.send(JSON.stringify(message));
+						update_admins();
+						ws.on('close', () => {
+								clients.delete(idC);
+								console.log('client deco :', idC)
+								update_admins();
 						});
-				} catch (error) {
-						console.error('Received a non-JSON');
-						console.log('Message : ', message.toString());
+				} 
+				// init d'un admin
+				else if (message.toString() === "/admin") {
+						console.log('Nouvel admin connecté');
+						admins.push(ws);
+				} 
+				// tout autre message
+				else {
+						try {
+								const receivedData = JSON.parse(message);
+								console.log('Received JSON:', receivedData);
+								wss.clients.forEach(client => {
+										if(client.readyState === WebSocket.OPEN){
+												client.send(JSON.stringify(receivedData));
+										}
+								});
+						} catch (error) {
+								console.log('Message pas prevu :', message.data.toString());
+						}
 				}
-
 
 				/*wss.clients.forEach(client => {
 						if(client.readyState === WebSocket.OPEN){
@@ -44,7 +82,6 @@ wss.on('connection', ws => {
 						}
 				});*/
 		});
-		ws.send('Check');
 });
 
 // Servir les fichiers statiques

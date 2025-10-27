@@ -16,8 +16,17 @@ function more_than_max(data, dataM, obj) {
 }
 
 console.log(window.location.pathname);
-if(window.location.pathname === "/admin"){
 
+
+function update_client_list(clients){
+		console.log('Update des clients...', clients);
+}
+function interpret_message(message){
+		console.log('Interpretation du message :', message);
+}
+
+if(window.location.pathname === "/admin"){
+// gestion du formulaire
 const form = document.getElementById("form");
 form.addEventListener('submit', (event) => {
 		event.preventDefault(); // pas de reload
@@ -31,29 +40,36 @@ form.addEventListener('submit', (event) => {
 		const tempMaxV = document.getElementById('max_temp').value;
 		const pniMaxV1 = document.getElementById('max_pni1').value;
 		// const pniMaxV2 = document.getElementById('pni_entry2').value;
-		const data = {
-				pouls : poulsV,
-				poulsM : poulsMaxV,
-				spo2 : spo2V,
-				spo2M : spo2MaxV,
-				temp : tempV,
-				tempM : tempMaxV,
-				pni1 : pniV1,
-				pni2 : pniV2,
-				pni1M : pniMaxV1,
-				//pni2M : pniMaxV2
+		const formData = { 
+				pour : "server",
+				type : "form",
+				data : {
+						pouls : poulsV,
+						poulsM : poulsMaxV,
+						spo2 : spo2V,
+						spo2M : spo2MaxV,
+						temp : tempV,
+						tempM : tempMaxV,
+						pni1 : pniV1,
+						pni2 : pniV2,
+						pni1M : pniMaxV1,
+						//pni2M : pniMaxV2
+						}
 		}
-		console.log(data);
-		socket.send(JSON.stringify(data));
+		console.log(formData);
+		socket.send(JSON.stringify(formData));
 });
 
-}else{
+} else {
+		console.log("On est pas sur la page admin");
+}
 
-console.log("On est pas sur la page admin");
-
+// interpretation de tout message
 socket.addEventListener("message", event => {
 		try {
-				const data = JSON.parse(event.data);
+				const message = JSON.parse(event.data);
+				interpret_message(message);
+				/*
 				console.log('Received JSON:', data);
 				const acc = ' > .contenu > p';
 				const pouls = document.querySelector('.pouls'+acc);
@@ -71,10 +87,17 @@ socket.addEventListener("message", event => {
 				more_than_max(data.spo2, data.spo2M, '.spo2');
 				more_than_max(data.temp, data.tempM, '.temp');
 				more_than_max(data.pni1, data.pni1M, '.pni');
+				*/
 		} catch (error) {
-				console.log('Oops : ', error);
-				console.log('Message : ', event.data.toString());
+				/*
+				if(event.data.toString()[0]==='i'){
+						console.log("Création de l'element DOM");
+						const idC = document.createElement('div');
+						idC.id = "id_client";
+						idC.textContent = event.data.toString().slice(1);
+						document.body.appendChild(idC);
+				}
+				*/
+				console.error('Oops : ', error, '\nMessage :', event.data.toString());
 		}
 });
-
-}
