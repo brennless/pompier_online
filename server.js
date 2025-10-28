@@ -23,24 +23,38 @@ const wss = new WebSocketServer({ server });
 const clients = new Map();
 let admins = [];
 
-function update_admins(){
-		const arrClientsId = Array.from(clients.keys());
+function update_admins(id, state){
+		const new_rm = state;
 		const message = {
 				pour : "admin",
-				type: "clients",
-				data : arrClientsId
+				type: new_rm,
+				data : id
 		};
 		admins.forEach(admin => {
 				admin.send(JSON.stringify(message));
 		});
 }
+
+function interpret(messageJSON){
+		console.log('Recieved JSON :', messageJSON);
+		if(messageJSON.type === 'form'){
+				clients.keys().forEach(id => {
+						if(clients.get(id).readyState === WebSocket.OPEN && messageJSON.data.ids.indexOf(id) != -1){
+								messageJSON.pour = "client";
+								console.log('Message transmis à :', id);
+								clients.get(id).send(JSON.stringify(messageJSON));
+						}	
+				});
+		}
+}
+
 // A la connection ws
 wss.on('connection', ws => {
 		console.log("Connection...");
 		ws.on('message', message => { // à la recepetion d'un message
 				// init d'un client
 				if(message.toString() === "/"){
-						const idC = randomUUID();
+						const idC = 'id-'+randomUUID();
 						clients.set(idC, ws);
 						console.log('Nouveau client, uid :', idC);
 						const message = {
@@ -48,31 +62,43 @@ wss.on('connection', ws => {
 								type : "id",
 								data : idC
 						}
+
 						ws.send(JSON.stringify(message));
-						update_admins();
+						update_admins(idC, "new_client");
 						ws.on('close', () => {
 								clients.delete(idC);
 								console.log('client deco :', idC)
-								update_admins();
+								update_admins(idC, "rm_client");
 						});
 				} 
 				// init d'un admin
 				else if (message.toString() === "/admin") {
 						console.log('Nouvel admin connecté');
+						clients.keys().forEach(id => {
+								console.log("Ajout d'un client init");
+								ws.send(JSON.stringify({
+										pour : 'admin',
+										type : 'new_client',
+										data : id
+								}));
+						});
 						admins.push(ws);
 				} 
 				// tout autre message
 				else {
 						try {
 								const receivedData = JSON.parse(message);
+								interpret(receivedData);
+								/*
 								console.log('Received JSON:', receivedData);
 								wss.clients.forEach(client => {
 										if(client.readyState === WebSocket.OPEN){
 												client.send(JSON.stringify(receivedData));
 										}
-								});
+								});*/
 						} catch (error) {
-								console.log('Message pas prevu :', message.data.toString());
+								console.error('oops : ', error);
+								console.log('Message pas prevu :', message.data);
 						}
 				}
 

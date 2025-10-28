@@ -8,22 +8,42 @@
 </head>
 <body>
 		<form id="form">
-		<label> Pouls : </label>
-		<input type="text" class="entry" id="pouls_entry" name="pouls_entry" placeholder="62">
-		<input type="text" class="entry" id="max_pouls" name="max_pouls_entry" placeholder="max"></br>
-		<label> SpO2 : </label>
-		<input type="text" class="entry" id="spo2_entry" name="spo2_entry" placeholder="92">
-		<input type="text" class="entry" id="max_spo2" name="max_spo2_entry" placeholder="max"></br>
+				<fieldset>
+						<legend>Affichage :</legend>
+						<fieldset>
+								<legend> Pouls : </legend>
+								<input type="text" class="entry" id="pouls_entry" name="pouls_entry" placeholder="62"> <
+								<input type="text" class="entry" id="max_pouls" name="max_pouls_entry" placeholder="max"></br>
+						</fieldset>
 
-		<label> Temp : </label>
-		<input type="text" class="entry" id="temp_entry" name="temp_entry" placeholder="37">
-		<input type="text" class="entry" id="max_temp" name="max_temp_entry" placeholder="max"></br>
-		<label> PNI : </label>
-		<input type="text" class="entry" id="pni_entry1" name="pni_entry_val1" placeholder="val1"> /
-		<input type="text" class="entry" id="pni_entry2" name="pni_entry_val2" placeholder="val2"></br>
-		<input type="text" class="entry" id="max_pni1" name="max_pni1" placeholder="max val1"></br>
+						<fieldset>
+								<legend> SpO2 : </legend>
+								<input type="text" class="entry" id="spo2_entry" name="spo2_entry" placeholder="92"> <
+								<input type="text" class="entry" id="max_spo2" name="max_spo2_entry" placeholder="max"></br>
+						</fieldset>
+						
+						<fieldset>
+								<legend> Temp : </legend>
+								<input type="text" class="entry" id="temp_entry" name="temp_entry" placeholder="37"> <
+								<input type="text" class="entry" id="max_temp" name="max_temp_entry" placeholder="max"></br>
+						</fieldset>
+
+						<fieldset>
+								<legend> PNI : </legend>
+								<input type="text" class="entry" id="pni_entry1" name="pni_entry_val1" placeholder="val1"> /
+								<input type="text" class="entry" id="pni_entry2" name="pni_entry_val2" placeholder="val2"></br>
+								val1 < <input type="text" class="entry" id="max_pni1" name="max_pni1" placeholder="max val1"></br>
+						</fieldset>
+				</fieldset>
+
+				<fieldset>
+						<legend>Clients : </legend>
+						<ul id="clients_list">
+						</ul>
+				</fieldset>
 		
-		<button type="submit" id="submit">Mettre à jour</button>
+
+				<button type="submit" id="submit">Mettre à jour</button>
 		</form>
 		<script type="text/javascript" src="script.js">
 		</script>
