@@ -75,12 +75,15 @@ wss.on('connection', ws => {
 				else if (message.toString() === "/admin") {
 						console.log('Nouvel admin connecté');
 						clients.keys().forEach(id => {
-								console.log("Ajout d'un client init");
-								ws.send(JSON.stringify({
-										pour : 'admin',
-										type : 'new_client',
-										data : id
-								}));
+								if(clients.get(id).readyState === WebSocket.OPEN){
+										ws.send(JSON.stringify({
+												pour : 'admin',
+												type : 'new_client',
+												data : id
+										}));
+								} else {
+										clients.delete(id);
+								}
 						});
 						admins.push(ws);
 				} 
